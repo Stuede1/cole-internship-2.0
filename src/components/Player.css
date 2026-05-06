@@ -1,0 +1,282 @@
+.player {
+  display: flex;
+  min-height: 100vh;
+}
+
+.player__content {
+  flex: 1;
+  margin-left: 280px;
+  margin-top: 64px;
+  padding: 40px;
+  background-color: white;
+  min-height: calc(100vh - 64px);
+}
+
+.player__container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.player__back-btn {
+  background: none;
+  border: none;
+  color: #032b41;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 24px;
+  transition: color 200ms;
+}
+
+.player__back-btn:hover {
+  color: #0365f2;
+}
+
+.player__main-title {
+  font-size: 32px;
+  color: #032b41;
+  font-weight: bold;
+  margin-bottom: 32px;
+  line-height: 1.2;
+}
+
+.player__summary {
+  margin-bottom: 40px;
+}
+
+.player__summary-title {
+  font-size: 24px;
+  color: #032b41;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.player__summary-text {
+  font-size: 16px;
+  color: #394547;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+.player__audio-footer {
+  position: fixed;
+  bottom: 0;
+  left: 280px;
+  right: 0;
+  background-color: #0b2230;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  z-index: 100;
+}
+
+.player__book-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: white;
+}
+
+.player__book-cover {
+  width: 40px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.player__book-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+.player__book-author {
+  font-size: 12px;
+  color: #a0a0a0;
+}
+
+.player__controls-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.player__controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.player__control-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: white;
+  color: #0b2230;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 200ms, transform 100ms;
+}
+
+.player__control-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.player__control-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.player__control-btn:active {
+  transform: scale(0.95);
+}
+
+.player__play-btn {
+  width: 48px;
+  height: 48px;
+}
+
+.player__play-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.player__progress-section {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-right: 24px;
+}
+
+.player__progress-bar {
+  width: 100%;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #1a3a4a;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.player__progress-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: white;
+  cursor: pointer;
+  transition: transform 100ms;
+}
+
+.player__progress-bar::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.player__progress-bar::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: white;
+  cursor: pointer;
+  border: none;
+}
+
+.player__time-display {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  font-size: 14px;
+  color: white;
+  font-weight: 400;
+}
+
+.player__current-time {
+  color: white;
+}
+
+.player__total-time {
+  color: #a0a0a0;
+}
+
+.player__loading,
+.player__error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  font-size: 18px;
+  color: #6b757b;
+}
+
+.player__error {
+  color: #c33;
+}
+
+.player__finished-indicator {
+  background-color: #4caf50;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  margin-left: 16px;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .player {
+    flex-direction: column;
+  }
+
+  .player__content {
+    margin-left: 0;
+    margin-top: 64px;
+    padding: 24px;
+  }
+
+  .player__audio-footer {
+    left: 0;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .player__controls-wrapper {
+    width: 100%;
+  }
+
+  .player__controls {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .player__progress-section {
+    width: 100%;
+  }
+
+  .player__book-info {
+    display: none;
+  }
+}

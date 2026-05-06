@@ -1,0 +1,99 @@
+.upgrade-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.upgrade-modal {
+  background-color: white;
+  border-radius: 12px;
+  padding: 40px;
+  max-width: 400px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.upgrade-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #394547;
+  font-size: 24px;
+  transition: color 200ms;
+}
+
+.upgrade-modal__close:hover {
+  color: #0365f2;
+}
+
+.upgrade-modal__icon {
+  font-size: 48px;
+  color: #ffd700;
+  margin-bottom: 16px;
+}
+
+.upgrade-modal__title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #032b41;
+  margin-bottom: 12px;
+}
+
+.upgrade-modal__description {
+  font-size: 14px;
+  color: #6b757b;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.upgrade-modal__features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.upgrade-modal__feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #032b41;
+}
+
+.upgrade-modal__feature-icon {
+  color: #4caf50;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.upgrade-modal__button {
+  background-color: #0365f2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 200ms;
+  width: 100%;
+}
+
+.upgrade-modal__button:hover {
+  background-color: #0255d1;
+}

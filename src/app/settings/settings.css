@@ -1,0 +1,192 @@
+.settings {
+  display: flex;
+  min-height: 100vh;
+}
+
+.settings__content {
+  flex: 1;
+  margin-left: 280px;
+  margin-top: 64px;
+  min-height: calc(100vh - 64px);
+  background-color: white;
+}
+
+.settings__main {
+  padding: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.settings__title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #032b41;
+  margin-bottom: 32px;
+}
+
+.settings__guest-notice {
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settings__guest-notice p {
+  color: #6b757b;
+  margin: 0;
+}
+
+.settings__login-btn {
+  background-color: #0365f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 200ms;
+}
+
+.settings__login-btn:hover {
+  background-color: #0255d1;
+}
+
+.settings__section {
+  margin-bottom: 32px;
+}
+
+.settings__section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #032b41;
+  margin-bottom: 16px;
+}
+
+.settings__subscription-card {
+  background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+}
+
+.settings__subscription-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.settings__subscription-icon {
+  font-size: 48px;
+}
+
+.settings__subscription-details {
+  flex: 1;
+}
+
+.settings__subscription-plan {
+  font-size: 20px;
+  font-weight: 600;
+  color: #032b41;
+  margin-bottom: 8px;
+}
+
+.settings__subscription-status {
+  font-size: 14px;
+  color: #032b41;
+  opacity: 0.8;
+}
+
+.settings__upgrade-btn {
+  background-color: #032b41;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 200ms;
+}
+
+.settings__upgrade-btn:hover {
+  background-color: #0255d1;
+}
+
+.settings__upgrade-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.settings__upgrade-btn:disabled:hover {
+  background-color: #ccc;
+}
+
+.settings__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.settings__item:last-child {
+  border-bottom: none;
+}
+
+.settings__item-info {
+  flex: 1;
+}
+
+.settings__item-label {
+  font-weight: 500;
+  color: #032b41;
+  margin-bottom: 4px;
+}
+
+.settings__item-value {
+  color: #6b757b;
+  font-size: 14px;
+}
+
+.settings__item-action {
+  background-color: #f8f9fa;
+  color: #0365f2;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 200ms, color 200ms;
+}
+
+.settings__item-action:hover {
+  background-color: #0365f2;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .settings__content {
+    margin-left: 0;
+  }
+  
+  .settings__main {
+    padding: 20px;
+  }
+  
+  .settings__guest-notice {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
