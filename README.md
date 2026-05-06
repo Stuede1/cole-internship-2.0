@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cole Internship 2.0 - Summarist App (Next.js + TypeScript)
 
-## Getting Started
+This is the **Next.js TypeScript migration** of the original Summarist React app, featuring book summaries with Firebase authentication and modern web technologies.
 
-First, run the development server:
+## 🚀 What's New
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- ✅ **Next.js 16** with App Router
+- ✅ **TypeScript** for type safety
+- ✅ **Tailwind CSS** for modern styling
+- ✅ **Firebase Authentication** with Google Sign-In
+- ✅ **React Firebase Hooks** for state management
+- ✅ **Responsive Design** preserved from original
+- ✅ **All original functionality** maintained
+
+## 📚 Features
+
+- 📖 **Book Summaries** - Quick insights from best books
+- 🎧 **Audio Support** - Listen to summaries
+- ⭐ **User Reviews** - Community feedback
+- 📊 **Reading Statistics** - Track your progress
+- 🔐 **Google Authentication** - Secure login
+- 📱 **Mobile Responsive** - Works on all devices
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 16 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS + Original CSS
+- **Authentication**: Firebase Auth
+- **Icons**: React Icons
+- **State Management**: React Firebase Hooks
+
+## 🚀 Getting Started
+
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Run development server**:
+   ```bash
+   npm run dev
+   ```
+
+3. **Open [http://localhost:3000](http://localhost:3000)** in your browser
+
+## 🔧 Firebase Setup
+
+The app uses Firebase for authentication. The configuration is already included in `src/firebase.ts` with the same credentials from the original project.
+
+## 📁 Project Structure
+
+```
+src/
+├── app/
+│   ├── page.tsx          # Main Summarist homepage
+│   ├── account/page.tsx   # User account page
+│   └── globals.css       # Global styles (Tailwind + Original)
+├── firebase.ts           # Firebase configuration
+└── components/          # Reusable components
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎨 Styling
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The app combines:
+- **Tailwind CSS** for utility-first styling
+- **Original Summarist CSS** for brand consistency
+- **Responsive design** for mobile compatibility
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔄 Migration Notes
 
-## Learn More
+This migration preserves all original functionality while upgrading to modern technologies:
 
-To learn more about Next.js, take a look at the following resources:
+- ✅ All original UI components and layouts
+- ✅ Firebase authentication flow
+- ✅ Reading statistics and user data
+- ✅ Responsive breakpoints
+- ✅ Color scheme and typography
+- ✅ Interactive elements and animations
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🚀 Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Ready for deployment on Vercel, Netlify, or any platform supporting Next.js:
 
-## Deploy on Vercel
+```bash
+npm run build
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📱 Original Features Preserved
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Rotating Statistics Headings** - Dynamic content updates
+- **Customer Reviews** - User testimonials
+- **Download Statistics** - App metrics
+- **Footer Navigation** - Complete site structure
+- **Google Sign-In** - Seamless authentication
+
+---
+
+**Built with ❤️ using Next.js, TypeScript, and Firebase**
