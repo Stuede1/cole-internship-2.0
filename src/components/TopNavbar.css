@@ -34,6 +34,7 @@
   padding: 8px 16px;
   gap: 8px;
   width: 300px;
+  position: relative;
 }
 
 .top-navbar__search-icon {
@@ -74,4 +75,76 @@
   .top-navbar {
     left: 0;
   }
+}
+
+.top-navbar__search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-top: 8px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.top-navbar__search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background-color 200ms;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.top-navbar__search-result-item:last-child {
+  border-bottom: none;
+}
+
+.top-navbar__search-result-item:hover {
+  background-color: #f8f9fa;
+}
+
+.top-navbar__search-result-image {
+  width: 40px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.top-navbar__search-result-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.top-navbar__search-result-title {
+  font-size: 14px;
+  color: #032b41;
+  margin: 0 0 4px 0;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.top-navbar__search-result-author {
+  font-size: 12px;
+  color: #6b757b;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.top-navbar__search-no-results {
+  padding: 16px;
+  text-align: center;
+  color: #6b757b;
+  font-size: 14px;
 }

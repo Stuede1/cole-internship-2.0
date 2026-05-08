@@ -1,23 +1,50 @@
 'use client';
 
 import { useAuth } from '@/components/AuthContext';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import TopNavbar from '@/components/TopNavbar';
+import AuthModal from '@/components/AuthModal';
 import UpgradeModal from '@/components/UpgradeModal';
 import './settings.css';
 
 export default function SettingsPage() {
   const { currentUser } = useAuth();
-  const router = useRouter();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   
   const currentSubscription = (currentUser as any)?.subscription || 'basic';
   
   const handleUpgradeClick = () => {
     setShowUpgradeModal(true);
   };
+  
+  useEffect(() => {
+    if (!currentUser) {
+      setShowAuthModal(true);
+    }
+  }, [currentUser]);
+  
+  if (!currentUser) {
+    return (
+      <div className="settings">
+        <Sidebar />
+        <div className="settings__content">
+          <TopNavbar />
+          <div className="settings__main">
+            <h1 className="settings__title">Settings</h1>
+            <div className="settings__guest-notice">
+              <p>Please sign in to access your settings</p>
+              <button className="settings__login-btn" onClick={() => setShowAuthModal(true)}>
+                Sign In
+              </button>
+            </div>
+          </div>
+        </div>
+        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+      </div>
+    );
+  }
   
   return (
     <div className="settings">
@@ -89,6 +116,7 @@ export default function SettingsPage() {
         </div>
       </div>
       <UpgradeModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   );
 }
