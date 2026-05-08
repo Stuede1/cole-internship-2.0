@@ -6,24 +6,69 @@ import Sidebar from '@/components/Sidebar';
 import TopNavbar from '@/components/TopNavbar';
 import AuthModal from '@/components/AuthModal';
 import UpgradeModal from '@/components/UpgradeModal';
+import app from '@/firebase';
+import { getCheckoutUrl, getPortalUrl } from '@/utils/stripePayment';
+import { getPremiumStatus } from '@/utils/getPremiumStatus';
 import './settings.css';
 
 export default function SettingsPage() {
   const { currentUser } = useAuth();
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
+  const [isLoadingPremium, setIsLoadingPremium] = useState(true);
   
-  const currentSubscription = (currentUser as any)?.subscription || 'basic';
-  
-  const handleUpgradeClick = () => {
-    setShowUpgradeModal(true);
-  };
+  // Your Stripe price ID for the premium subscription
+  const PRICE_ID = 'price_1TUxyjF1njQGrJJccuCg1brO';
   
   useEffect(() => {
     if (!currentUser) {
       setShowAuthModal(true);
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    const checkPremiumStatus = async () => {
+      if (currentUser) {
+        try {
+          const premiumStatus = await getPremiumStatus(app);
+          setIsPremium(premiumStatus);
+        } catch (error) {
+          console.error('Error checking premium status:', error);
+          setIsPremium(false);
+        } finally {
+          setIsLoadingPremium(false);
+        }
+      }
+    };
+    
+    checkPremiumStatus();
+  }, [currentUser]);
+  
+  const handleUpgradeClick = async () => {
+    if (!currentUser) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    try {
+      const checkoutUrl = await getCheckoutUrl(app, PRICE_ID);
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      // Fallback to showing the modal if checkout fails
+      setShowUpgradeModal(true);
+    }
+  };
+
+  const handleManageSubscription = async () => {
+    try {
+      const portalUrl = await getPortalUrl(app);
+      window.location.href = portalUrl;
+    } catch (error) {
+      console.error('Error opening portal:', error);
+    }
+  };
   
   if (!currentUser) {
     return (
@@ -79,18 +124,23 @@ export default function SettingsPage() {
                 <div className="settings__subscription-icon">👑</div>
                 <div className="settings__subscription-details">
                   <h3 className="settings__subscription-plan">
-                    {currentSubscription === 'premium' ? 'Premium Plan' : 'Basic Plan'}
+                    {isLoadingPremium ? 'Loading...' : (isPremium ? 'Premium Plan' : 'Basic Plan')}
                   </h3>
                   <p className="settings__subscription-status">
-                    {currentSubscription === 'premium' 
+                    {isPremium 
                       ? 'You have full access to all premium features' 
                       : 'Upgrade to premium for full access to all books'}
                   </p>
                 </div>
               </div>
-              {currentSubscription === 'basic' && (
+              {!isLoadingPremium && !isPremium && (
                 <button className="settings__upgrade-btn" onClick={handleUpgradeClick}>
                   Upgrade to Premium
+                </button>
+              )}
+              {!isLoadingPremium && isPremium && (
+                <button className="settings__upgrade-btn" onClick={handleManageSubscription}>
+                  Manage Subscription
                 </button>
               )}
             </div>
