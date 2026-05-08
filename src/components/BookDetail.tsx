@@ -9,6 +9,8 @@ import AuthModal from './AuthModal';
 import UpgradeModal from './UpgradeModal';
 import { useAuth } from './AuthContext';
 import { useLibraryManager } from './LibraryManager';
+import app from '@/firebase';
+import { getPremiumStatus } from '@/utils/getPremiumStatus';
 import './BookDetail.css';
 
 interface Book {
@@ -39,6 +41,8 @@ function BookDetail() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
+  const [isLoadingPremium, setIsLoadingPremium] = useState(true);
   
   
   useEffect(() => {
@@ -66,6 +70,26 @@ function BookDetail() {
     }
   }, [book, currentUser, isBookSaved]);
 
+  useEffect(() => {
+    const checkPremiumStatus = async () => {
+      if (currentUser) {
+        try {
+          const premiumStatus = await getPremiumStatus(app);
+          setIsPremium(premiumStatus);
+        } catch (error) {
+          console.error('Error checking premium status:', error);
+          setIsPremium(false);
+        } finally {
+          setIsLoadingPremium(false);
+        }
+      } else {
+        setIsLoadingPremium(false);
+      }
+    };
+    
+    checkPremiumStatus();
+  }, [currentUser]);
+
   const handleReadOrListen = () => {
     if (!book) return;
     
@@ -81,11 +105,8 @@ function BookDetail() {
       return;
     }
 
-    // Check if user is subscribed (this would need to be implemented)
-    // For now, assuming we have a subscription check
-    const isSubscribed = (currentUser as any)?.subscription === 'premium' || false;
-
-    if (book.subscriptionRequired && !isSubscribed) {
+    // Check if user has active Stripe subscription
+    if (book.subscriptionRequired && !isPremium) {
       // Show upgrade modal for basic users
       setShowUpgradeModal(true);
       return;
@@ -214,6 +235,10 @@ function BookDetail() {
               {book.subscriptionRequired && !currentUser ? (
                 <div className="book-detail__guest-message">
                   <p>Please sign in to view the full description</p>
+                </div>
+              ) : book.subscriptionRequired && !isPremium ? (
+                <div className="book-detail__guest-message">
+                  <p>Upgrade to Premium to view the full description</p>
                 </div>
               ) : (
                 <p>{book.bookDescription || 'No description available.'}</p>
