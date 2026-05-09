@@ -71,9 +71,36 @@
   background-color: #0255d1;
 }
 
+.top-navbar__menu-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: #032b41;
+  font-size: 24px;
+  transition: color 200ms;
+}
+
+.top-navbar__menu-button:hover {
+  color: #0365f2;
+}
+
 @media (max-width: 768px) {
   .top-navbar {
     left: 0;
+  }
+
+  .top-navbar__menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .top-navbar__search {
+    width: 200px;
   }
 }
 

@@ -122,7 +122,7 @@ export default function SearchPage() {
   return (
     <div className="search">
       <Sidebar />
-      <TopNavbar />
+      <TopNavbar showMenuButton={true} />
       <div className="search__content">
         <div className="search__main">
           <h1 className="search__title">Search Books</h1>

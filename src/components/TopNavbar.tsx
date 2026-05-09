@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { AiOutlineSearch } from 'react-icons/ai';
+import { AiOutlineSearch, AiOutlineMenu } from 'react-icons/ai';
 import { useRouter } from 'next/navigation';
 import UserProfile from '@/components/UserProfile';
 import './TopNavbar.css';
@@ -16,12 +16,22 @@ interface Book {
   subscriptionRequired: boolean;
 }
 
-function TopNavbar() {
+interface TopNavbarProps {
+  onMenuClick?: () => void;
+  showMenuButton?: boolean;
+}
+
+function TopNavbar({ onMenuClick, showMenuButton = false }: TopNavbarProps) {
   const router = useRouter();
   const searchRef = useRef<HTMLDivElement>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Book[]>([]);
   const [showResults, setShowResults] = useState(false);
+
+  const handleMenuClick = () => {
+    window.dispatchEvent(new CustomEvent('open-sidebar'));
+    if (onMenuClick) onMenuClick();
+  };
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -77,7 +87,10 @@ function TopNavbar() {
   return (
     <nav className="top-navbar">
       <div className="top-navbar__container">
-        <div className="top-navbar__right">
+        <button className="top-navbar__menu-button" onClick={handleMenuClick}>
+          <AiOutlineMenu />
+        </button>
+        <div className="top-navbar__right" style={{ marginLeft: 'auto' }}>
           <div className="top-navbar__search" ref={searchRef}>
             <AiOutlineSearch className="top-navbar__search-icon" />
             <input 

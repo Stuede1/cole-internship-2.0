@@ -97,3 +97,83 @@
 .upgrade-modal__button:hover {
   background-color: #0255d1;
 }
+
+@media (max-width: 768px) {
+  .upgrade-modal {
+    padding: 32px 24px;
+    max-width: 380px;
+  }
+
+  .upgrade-modal__icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+  }
+
+  .upgrade-modal__title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .upgrade-modal__description {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .upgrade-modal__features {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .upgrade-modal__feature {
+    font-size: 13px;
+  }
+
+  .upgrade-modal__button {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .upgrade-modal {
+    padding: 24px 20px;
+    max-width: 100%;
+    width: 95%;
+  }
+
+  .upgrade-modal__icon {
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
+
+  .upgrade-modal__title {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .upgrade-modal__description {
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+
+  .upgrade-modal__features {
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .upgrade-modal__feature {
+    font-size: 12px;
+    gap: 10px;
+  }
+
+  .upgrade-modal__button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .upgrade-modal__close {
+    font-size: 20px;
+    top: 12px;
+    right: 12px;
+  }
+}

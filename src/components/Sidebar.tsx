@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { BsBook, BsBookmark, BsGear, BsQuestionCircle, BsBoxArrowRight, BsHouse } from 'react-icons/bs';
@@ -13,10 +13,25 @@ function Sidebar() {
   const router = useRouter();
   const { logout, currentUser } = useAuth();
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpenSidebar = () => setIsMobileOpen(true);
+    const handleCloseSidebar = () => setIsMobileOpen(false);
+
+    window.addEventListener('open-sidebar', handleOpenSidebar as EventListener);
+    window.addEventListener('close-sidebar', handleCloseSidebar as EventListener);
+
+    return () => {
+      window.removeEventListener('open-sidebar', handleOpenSidebar as EventListener);
+      window.removeEventListener('close-sidebar', handleCloseSidebar as EventListener);
+    };
+  }, []);
 
   const handleNavClick = (item: any) => {
     if (item.disabled) return;
     router.push(item.path);
+    setIsMobileOpen(false);
   };
 
   const handleLoginClick = () => {
@@ -40,7 +55,11 @@ function Sidebar() {
   };
 
   return (
-    <aside className="sidebar">
+    <>
+      {isMobileOpen && (
+        <div className="sidebar__overlay" onClick={() => setIsMobileOpen(false)} />
+      )}
+      <aside className={`sidebar ${isMobileOpen ? 'sidebar--mobile-open' : ''}`}>
       <div className="sidebar__logo">
         <img src="/assets/logo.png" alt="Summarist" />
       </div>
@@ -81,6 +100,7 @@ function Sidebar() {
       </nav>
       <LoginPopup isOpen={isLoginPopupOpen} onClose={() => setIsLoginPopupOpen(false)} />
     </aside>
+    </>
   );
 }
 

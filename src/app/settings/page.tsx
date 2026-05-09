@@ -99,7 +99,7 @@ export default function SettingsPage() {
       <div className="settings">
         <Sidebar />
         <div className="settings__content">
-          <TopNavbar />
+          <TopNavbar showMenuButton={true} />
           <div className="settings__main">
             <h1 className="settings__title">Settings</h1>
             <div className="settings__guest-notice">
