@@ -1,8 +1,8 @@
 'use client';
 
-import { useAuth } from '@/components/AuthContext';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useAuth } from '@/components/AuthContext';
 import { FaClock, FaStar } from 'react-icons/fa';
 import Sidebar from '@/components/Sidebar';
 import TopNavbar from '@/components/TopNavbar';
@@ -32,6 +32,7 @@ export default function MyLibraryPage() {
   const [loading, setLoading] = useState(true);
   const [loadingDetails, setLoadingDetails] = useState<{ [key: string]: boolean }>({});
   const [bookDurations, setBookDurations] = useState<{ [key: string]: number | null }>({});
+  const loadingRef = useRef<Set<string>>(new Set());
   
   const formatDuration = (seconds: number | null) => {
     if (seconds === null) return '--:--';
@@ -50,48 +51,68 @@ export default function MyLibraryPage() {
   }, []);
 
   const loadAudioDurations = async (books: LibraryBook[]) => {
-    const durations: { [key: string]: number | null } = { ...bookDurations };
-    const booksToLoad: LibraryBook[] = [];
-    
     for (const book of books) {
-      if (durations[book.id] === undefined && book.audioLink) {
-        booksToLoad.push(book);
+      // Skip if already loading or already has duration
+      if (loadingRef.current.has(book.id) || bookDurations[book.id] !== undefined) {
+        continue;
       }
-    }
-    
-    for (const book of booksToLoad) {
+      
+      if (!book.audioLink) {
+        setBookDurations(prev => ({ ...prev, [book.id]: null }));
+        continue;
+      }
+      
+      // Mark as loading
+      loadingRef.current.add(book.id);
+      
       try {
         const audio = new Audio(book.audioLink);
         audio.load();
         
         const timeout = setTimeout(() => {
-          if (durations[book.id] === undefined) {
-            durations[book.id] = null;
-            setBookDurations({ ...durations });
-            localStorage.setItem('bookDurations', JSON.stringify(durations));
-          }
+          loadingRef.current.delete(book.id);
+          setBookDurations(prev => {
+            const durations = { ...prev };
+            if (durations[book.id] === undefined) {
+              durations[book.id] = null;
+              localStorage.setItem('bookDurations', JSON.stringify(durations));
+            }
+            return durations;
+          });
         }, 10000);
         
         await new Promise<void>((resolve) => {
           audio.addEventListener('loadedmetadata', () => {
             clearTimeout(timeout);
-            durations[book.id] = audio.duration;
-            setBookDurations({ ...durations });
-            localStorage.setItem('bookDurations', JSON.stringify(durations));
+            loadingRef.current.delete(book.id);
+            setBookDurations(prev => {
+              const durations = { ...prev };
+              durations[book.id] = audio.duration;
+              localStorage.setItem('bookDurations', JSON.stringify(durations));
+              return durations;
+            });
             resolve();
           });
           audio.addEventListener('error', () => {
             clearTimeout(timeout);
-            durations[book.id] = null;
-            setBookDurations({ ...durations });
-            localStorage.setItem('bookDurations', JSON.stringify(durations));
+            loadingRef.current.delete(book.id);
+            setBookDurations(prev => {
+              const durations = { ...prev };
+              durations[book.id] = null;
+              localStorage.setItem('bookDurations', JSON.stringify(durations));
+              return durations;
+            });
             resolve();
           });
         });
       } catch (error) {
-        durations[book.id] = null;
-        setBookDurations({ ...durations });
-        localStorage.setItem('bookDurations', JSON.stringify(durations));
+        loadingRef.current.delete(book.id);
+        setBookDurations(prev => {
+          const durations = { ...prev };
+          durations[book.id] = null;
+          localStorage.setItem('bookDurations', JSON.stringify(durations));
+          return durations;
+        });
       }
     }
   };
