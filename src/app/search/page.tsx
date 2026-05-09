@@ -109,7 +109,6 @@ export default function SearchPage() {
     try {
       const response = await fetch(`https://us-central1-summaristt.cloudfunctions.net/getBooksByAuthorOrTitle?search=${query}`);
       const data = await response.json();
-      console.log('Search results:', data);
       setSearchResults(data);
       loadAudioDurations(data);
     } catch (err) {
@@ -122,7 +121,7 @@ export default function SearchPage() {
   return (
     <div className="search">
       <Sidebar />
-      <TopNavbar showMenuButton={true} />
+      <TopNavbar />
       <div className="search__content">
         <div className="search__main">
           <h1 className="search__title">Search Books</h1>

@@ -50,7 +50,6 @@ function BookDetail() {
       try {
         const response = await fetch(`https://us-central1-summaristt.cloudfunctions.net/getBook?id=${params.id}`);
         const data = await response.json();
-        console.log('Book details:', data);
         setBook(data);
         setLoading(false);
       } catch (err) {
@@ -129,26 +128,21 @@ function BookDetail() {
   const handleReadOrListen = () => {
     if (!book) return;
     
-    // If book is not premium, allow access without login
     if (!book.subscriptionRequired) {
       router.push(`/player/${params.id}`);
       return;
     }
 
-    // If book is premium, require login
     if (!currentUser) {
       setShowAuthModal(true);
       return;
     }
 
-    // Check if user has active Stripe subscription
     if (book.subscriptionRequired && !isPremium) {
-      // Redirect to choose-plan page for basic users
       router.push('/choose-plan');
       return;
     }
 
-    // If user is subscribed, allow access
     router.push(`/player/${params.id}`);
   };
 
@@ -161,18 +155,14 @@ function BookDetail() {
     if (!book) return;
 
     if (isSaved) {
-      // Remove book from library
       const success = removeSavedBook(book.id);
       if (success) {
         setIsSaved(false);
-        console.log('Book removed from library:', book.title);
       }
     } else {
-      // Save book to library
       const success = saveBook(book);
       if (success) {
         setIsSaved(true);
-        console.log('Book saved to library:', book.title);
       }
     }
   };

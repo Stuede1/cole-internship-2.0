@@ -12,7 +12,6 @@ function UserProfile() {
   const handleLogout = async () => {
     try {
       const result = await logout();
-      console.log('Logout result:', result);
       if (result.success) {
         router.push('/');
       } else {

@@ -22,7 +22,6 @@ interface Book {
 export const useLibraryManager = () => {
   const { currentUser } = useAuth();
 
-  // Save book to library
   const saveBook = (book: Book) => {
     if (!currentUser) return false;
     
@@ -31,21 +30,19 @@ export const useLibraryManager = () => {
       const savedBooksData = localStorage.getItem(savedBooksKey);
       const savedBooks = savedBooksData ? JSON.parse(savedBooksData) : [];
       
-      // Check if book is already saved
       if (!savedBooks.find((b: Book) => b.id === book.id)) {
         const updatedBooks = [...savedBooks, { ...book, type: 'saved', dateAdded: new Date().toISOString() }];
         localStorage.setItem(savedBooksKey, JSON.stringify(updatedBooks));
         return true;
       }
       
-      return false; // Already saved
+      return false;
     } catch (error) {
       console.error('Error saving book:', error);
       return false;
     }
   };
 
-  // Remove book from saved books
   const removeSavedBook = (bookId: string) => {
     if (!currentUser) return false;
     
@@ -63,31 +60,27 @@ export const useLibraryManager = () => {
     }
   };
 
-  // Mark book as finished
   const finishBook = (book: Book) => {
     if (!currentUser) return false;
     
     try {
-      // Add to finished books (book stays in saved books)
       const finishedBooksKey = `finishedBooks_${currentUser.uid}`;
       const finishedBooksData = localStorage.getItem(finishedBooksKey);
       const finishedBooks = finishedBooksData ? JSON.parse(finishedBooksData) : [];
       
-      // Check if book is already finished
       if (!finishedBooks.find((b: Book) => b.id === book.id)) {
         const updatedBooks = [...finishedBooks, { ...book, type: 'finished', dateAdded: new Date().toISOString() }];
         localStorage.setItem(finishedBooksKey, JSON.stringify(updatedBooks));
         return true;
       }
       
-      return false; // Already finished
+      return false;
     } catch (error) {
       console.error('Error finishing book:', error);
       return false;
     }
   };
 
-  // Check if book is saved
   const isBookSaved = (bookId: string): boolean => {
     if (!currentUser) return false;
     
@@ -103,7 +96,6 @@ export const useLibraryManager = () => {
     }
   };
 
-  // Check if book is finished
   const isBookFinished = (bookId: string): boolean => {
     if (!currentUser) return false;
     

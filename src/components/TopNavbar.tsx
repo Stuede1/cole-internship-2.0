@@ -16,12 +16,7 @@ interface Book {
   subscriptionRequired: boolean;
 }
 
-interface TopNavbarProps {
-  onMenuClick?: () => void;
-  showMenuButton?: boolean;
-}
-
-function TopNavbar({ onMenuClick, showMenuButton = false }: TopNavbarProps) {
+function TopNavbar() {
   const router = useRouter();
   const searchRef = useRef<HTMLDivElement>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -30,7 +25,6 @@ function TopNavbar({ onMenuClick, showMenuButton = false }: TopNavbarProps) {
 
   const handleMenuClick = () => {
     window.dispatchEvent(new CustomEvent('open-sidebar'));
-    if (onMenuClick) onMenuClick();
   };
 
   useEffect(() => {
@@ -90,7 +84,7 @@ function TopNavbar({ onMenuClick, showMenuButton = false }: TopNavbarProps) {
         <button className="top-navbar__menu-button" onClick={handleMenuClick}>
           <AiOutlineMenu />
         </button>
-        <div className="top-navbar__right" style={{ marginLeft: 'auto' }}>
+        <div className="top-navbar__right">
           <div className="top-navbar__search" ref={searchRef}>
             <AiOutlineSearch className="top-navbar__search-icon" />
             <input 

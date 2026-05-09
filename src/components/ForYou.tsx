@@ -41,7 +41,6 @@ function ForYouContent() {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Load cached durations from localStorage
   useEffect(() => {
     const cached = localStorage.getItem('bookDurations');
     if (cached) {
@@ -51,7 +50,6 @@ function ForYouContent() {
 
   const loadAudioDurations = async (books: Book[]) => {
     for (const book of books) {
-      // Skip if already loading or already has duration
       if (loadingRef.current.has(book.id) || bookDurations[book.id] !== undefined) {
         continue;
       }
@@ -61,7 +59,6 @@ function ForYouContent() {
         continue;
       }
       
-      // Mark as loading
       loadingRef.current.add(book.id);
       
       try {
@@ -121,7 +118,6 @@ function ForYouContent() {
       try {
         const response = await fetch('https://us-central1-summaristt.cloudfunctions.net/getBooks?status=selected');
         const data = await response.json();
-        console.log('Selected books:', data);
         setBooks(data);
         loadAudioDurations(data);
         setLoading(false);
@@ -135,7 +131,6 @@ function ForYouContent() {
       try {
         const response = await fetch('https://us-central1-summaristt.cloudfunctions.net/getBooks?status=recommended');
         const data = await response.json();
-        console.log('Recommended books:', data);
         setRecommendedBooks(data);
         loadAudioDurations(data);
         setLoadingRecommended(false);
@@ -149,7 +144,6 @@ function ForYouContent() {
       try {
         const response = await fetch('https://us-central1-summaristt.cloudfunctions.net/getBooks?status=suggested');
         const data = await response.json();
-        console.log('Suggested books:', data);
         setSuggestedBooks(data);
         loadAudioDurations(data);
         setLoadingSuggested(false);

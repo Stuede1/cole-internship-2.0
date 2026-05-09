@@ -42,7 +42,6 @@ export const getCheckoutUrl = async (
         reject(new Error(`An error occurred: ${error.message}`));
       }
       if (url) {
-        console.log("Stripe Checkout URL:", url);
         unsubscribe();
         resolve(url);
       }
@@ -66,9 +65,7 @@ export const getPortalUrl = async (app: FirebaseApp): Promise<string> => {
       returnUrl: window.location.origin,
     });
 
-    // Add a type to the data
     dataWithUrl = data as { url: string };
-    console.log("Reroute to Stripe portal: ", dataWithUrl.url);
   } catch (error) {
     console.error(error);
   }

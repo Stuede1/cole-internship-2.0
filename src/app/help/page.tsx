@@ -8,7 +8,7 @@ export default function HelpPage() {
   return (
     <div className="help">
       <Sidebar />
-      <TopNavbar showMenuButton={true} />
+      <TopNavbar />
       <div className="help__content">
         <div className="help__main">
           <h1 className="help__title">Help & Support</h1>

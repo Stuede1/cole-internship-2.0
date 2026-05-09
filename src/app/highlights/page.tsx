@@ -8,7 +8,7 @@ export default function HighlightsPage() {
   return (
     <div className="highlights">
       <Sidebar />
-      <TopNavbar showMenuButton={true} />
+      <TopNavbar />
       <div className="highlights__content">
         <div className="highlights__main">
           <h1 className="highlights__title">Highlights</h1>

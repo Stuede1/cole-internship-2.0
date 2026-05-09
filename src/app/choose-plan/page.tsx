@@ -42,7 +42,7 @@ export default function ChoosePlanPage() {
   return (
     <div className="choose-plan">
       <Sidebar />
-      <TopNavbar showMenuButton={true} />
+      <TopNavbar />
       <div className="choose-plan__content">
         <div className="choose-plan__container">
           <button className="choose-plan__back-btn" onClick={() => router.back()}>

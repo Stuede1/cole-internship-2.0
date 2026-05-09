@@ -34,7 +34,6 @@ function LoginPopup({ isOpen, onClose }: LoginPopupProps) {
 
   const handleGuestLogin = () => {
     onClose();
-    // Navigate to for-you as guest (no user account created)
     router.push('/for-you');
   };
 

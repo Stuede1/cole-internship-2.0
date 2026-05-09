@@ -29,7 +29,6 @@ function Player() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  // Audio player state
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -43,7 +42,6 @@ function Player() {
       try {
         const response = await fetch(`https://us-central1-summaristt.cloudfunctions.net/getBook?id=${params.id}`);
         const data = await response.json();
-        console.log('Book details:', data);
         setBook(data);
         setLoading(false);
       } catch (err) {
@@ -69,17 +67,14 @@ function Player() {
     const handleTimeUpdate = () => {
       const newTime = audio.currentTime;
       setCurrentTime(newTime);
-      console.log('Current time:', newTime);
     };
 
     const handleEnded = () => {
       setIsPlaying(false);
       setCurrentTime(0);
       setIsFinished(true);
-      // Mark book as finished when audio completes
       if (book) {
         finishBook(book);
-        console.log('Book finished:', book.title);
       }
     };
 
@@ -130,7 +125,6 @@ function Player() {
     }
   };
 
-  // Start/stop progress animation based on play state
   useEffect(() => {
     if (isPlaying) {
       animationRef.current = requestAnimationFrame(updateProgress);
@@ -222,14 +216,13 @@ function Player() {
           ref={audioRef}
           src={book.audioLink}
           onLoadedMetadata={() => {
-            console.log('Audio loaded, duration:', audioRef.current?.duration);
             if (audioRef.current) {
               setDuration(audioRef.current.duration);
             }
           }}
-          onPlay={() => console.log('Audio playing')}
-          onPause={() => console.log('Audio paused')}
-          onError={(e) => console.log('Audio error:', e)}
+          onPlay={() => {}}
+          onPause={() => {}}
+          onError={(e) => console.error('Audio error:', e)}
         />
         
         <div className="player__controls-wrapper">

@@ -184,7 +184,7 @@ export default function MyLibraryPage() {
     return (
       <div className="library">
         <Sidebar />
-        <TopNavbar showMenuButton={true} />
+        <TopNavbar />
         <div className="library__content">
           <div className="library__header">
             <h1 className="library__title">My Library</h1>
