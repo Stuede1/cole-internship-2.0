@@ -2,13 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
-import { initFirebase } from "@/firebase";
+import app from "@/firebase";
 import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Account() {
   const router = useRouter();
-  const app = initFirebase();
   const auth = getAuth(app);
   const [user, loading] = useAuthState(auth);
 
