@@ -68,10 +68,7 @@ export const useLibraryManager = () => {
     if (!currentUser) return false;
     
     try {
-      // Remove from saved books first
-      removeSavedBook(book.id);
-      
-      // Add to finished books
+      // Add to finished books (book stays in saved books)
       const finishedBooksKey = `finishedBooks_${currentUser.uid}`;
       const finishedBooksData = localStorage.getItem(finishedBooksKey);
       const finishedBooks = finishedBooksData ? JSON.parse(finishedBooksData) : [];

@@ -79,11 +79,11 @@
   background-color: #0365f2;
   color: white;
   border: none;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-size: 14px;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
   font-weight: 500;
-  cursor: pointer;
+  cursor: not-allowed;
   transition: background-color 200ms;
 }
 

@@ -15,6 +15,7 @@ function Sidebar() {
   const [isLoginPopupOpen, setIsLoginPopupOpen] = useState(false);
 
   const handleNavClick = (item: any) => {
+    if (item.disabled) return;
     router.push(item.path);
   };
 
@@ -25,7 +26,7 @@ function Sidebar() {
   const navItems = [
     { path: '/for-you', label: 'For you', icon: <BsHouse /> },
     { path: '/my-library', label: 'Library', icon: <BsBook /> },
-    { path: '/highlights', label: 'Highlights', icon: <BsBookmark /> },
+    { path: '/highlights', label: 'Highlights', icon: <BsBookmark />, disabled: true },
     { path: '/search', label: 'Search', icon: <AiOutlineSearch /> },
     { path: '/settings', label: 'Settings', icon: <BsGear /> },
     { path: '/help', label: 'Help & Support', icon: <BsQuestionCircle /> },
@@ -54,7 +55,7 @@ function Sidebar() {
           <button
             key={item.path}
             onClick={() => handleNavClick(item)}
-            className={`sidebar__nav-item ${pathname === item.path ? 'sidebar__nav-item--active' : ''}`}
+            className={`sidebar__nav-item ${pathname === item.path ? 'sidebar__nav-item--active' : ''} ${item.disabled ? 'sidebar__nav-item--disabled' : ''}`}
           >
             {item.icon && <span className="sidebar__nav-icon">{item.icon}</span>}
             <span className="sidebar__nav-label">{item.label}</span>

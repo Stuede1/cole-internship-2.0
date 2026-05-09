@@ -1,0 +1,76 @@
+.skeleton {
+  background-color: #e0e0e0;
+  animation: shimmer 1.5s infinite linear;
+  background: linear-gradient(
+    90deg,
+    #e0e0e0 0px,
+    #f0f0f0 40px,
+    #e0e0e0 80px
+  );
+  background-size: 200% 100%;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton--text {
+  border-radius: 4px;
+}
+
+.skeleton--rectangular {
+  border-radius: 4px;
+}
+
+.skeleton--circular {
+  border-radius: 50%;
+}
+
+.skeleton-card {
+  opacity: 0.7;
+}
+
+.book-card-horizontal.skeleton-card {
+  display: flex;
+  gap: 16px;
+  padding: 12px;
+  background-color: white;
+  border-radius: 8px;
+}
+
+.book-card-horizontal.skeleton-card .book-card-horizontal__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.book-card-vertical.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.settings__item.skeleton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: white;
+  border-radius: 8px;
+}
+
+.settings__item.skeleton .settings__item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

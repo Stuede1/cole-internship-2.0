@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { FaClock, FaStar } from 'react-icons/fa';
 import Sidebar from '@/components/Sidebar';
 import TopNavbar from '@/components/TopNavbar';
+import { BookCardVerticalSkeleton } from '@/components/Skeleton';
 import './library.css';
 import '@/components/ForYou.css';
 
@@ -43,7 +44,7 @@ export default function MyLibraryPage() {
         
         // Fetch full book details for each saved book
         const savedBooksWithDetails = await Promise.all(
-          savedBooks.map(async (book) => {
+          savedBooks.map(async (book: any) => {
             try {
               const response = await fetch(`https://us-central1-summaristt.cloudfunctions.net/getBook?id=${book.id}`);
               const bookDetails = await response.json();
@@ -57,7 +58,7 @@ export default function MyLibraryPage() {
         
         // Fetch full book details for each finished book
         const finishedBooksWithDetails = await Promise.all(
-          finishedBooks.map(async (book) => {
+          finishedBooks.map(async (book: any) => {
             try {
               const response = await fetch(`https://us-central1-summaristt.cloudfunctions.net/getBook?id=${book.id}`);
               const bookDetails = await response.json();
@@ -87,7 +88,40 @@ export default function MyLibraryPage() {
     }
   }, [currentUser]);
 
-  // No loading check needed - everyone can access
+  if (loading) {
+    return (
+      <div className="library">
+        <Sidebar />
+        <TopNavbar />
+        <div className="library__content">
+          <div className="library__header">
+            <h1 className="library__title">My Library</h1>
+            <p className="library__subtitle">Your saved and finished books</p>
+          </div>
+
+          {/* Saved Books Section */}
+          <div className="library__section">
+            <h2 className="library__section-title">Saved Books</h2>
+            <div className="for-you__recommended-list">
+              {[...Array(5)].map((_, i) => (
+                <BookCardVerticalSkeleton key={i} />
+              ))}
+            </div>
+          </div>
+
+          {/* Finished Books Section */}
+          <div className="library__section">
+            <h2 className="library__section-title">Finished Books</h2>
+            <div className="for-you__recommended-list">
+              {[...Array(5)].map((_, i) => (
+                <BookCardVerticalSkeleton key={i} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="library">

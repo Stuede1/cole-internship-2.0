@@ -175,6 +175,52 @@
   color: white;
 }
 
+.settings__item-action--not-implemented {
+  cursor: not-allowed;
+}
+
+.settings__input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 200ms;
+}
+
+.settings__input:focus {
+  border-color: #0365f2;
+}
+
+.settings__input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.settings__item-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.settings__item-action--save {
+  background-color: #0365f2;
+  color: white;
+}
+
+.settings__item-action--save:hover {
+  background-color: #0255d1;
+}
+
+.settings__item-action--cancel {
+  background-color: #f5f5f5;
+  color: #6b757b;
+}
+
+.settings__item-action--cancel:hover {
+  background-color: #e0e0e0;
+}
+
 @media (max-width: 768px) {
   .settings__content {
     margin-left: 0;

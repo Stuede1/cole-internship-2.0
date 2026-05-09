@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { FaClock, FaStar, FaCrown } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
+import Skeleton, { BookCardHorizontalSkeleton, BookCardVerticalSkeleton } from './Skeleton';
 import './ForYou.css';
 
 interface Book {
@@ -81,7 +82,15 @@ function ForYouContent() {
   if (loading) {
     return (
       <div className="for-you__content">
-        <div className="for-you__loading">Loading books...</div>
+        <div className="row">
+          <h2 className="for-you__title">For You</h2>
+          <p className="for-you__subtitle">We think you like these</p>
+          <div className="for-you__books-list">
+            {[...Array(5)].map((_, i) => (
+              <BookCardHorizontalSkeleton key={i} />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -129,7 +138,9 @@ function ForYouContent() {
         <p className="for-you__subtitle">We think you like these</p>
         <div className="for-you__recommended-list">
           {loadingRecommended ? (
-            <div className="for-you__loading">Loading recommended books...</div>
+            [...Array(5)].map((_, i) => (
+              <BookCardVerticalSkeleton key={i} />
+            ))
           ) : recommendedError ? (
             <div className="for-you__error">{recommendedError}</div>
           ) : (
@@ -171,7 +182,9 @@ function ForYouContent() {
         <p className="for-you__subtitle">Browse these books</p>
         <div className="for-you__suggested-list">
           {loadingSuggested ? (
-            <div className="for-you__loading">Loading suggested books...</div>
+            [...Array(5)].map((_, i) => (
+              <BookCardVerticalSkeleton key={i} />
+            ))
           ) : suggestedError ? (
             <div className="for-you__error">{suggestedError}</div>
           ) : suggestedBooks.length === 0 ? (

@@ -26,8 +26,8 @@ export const getCheckoutUrl = async (
 
   const docRef = await addDoc(checkoutSessionRef, {
     price: priceId,
-    success_url: window.location.origin,
-    cancel_url: window.location.origin,
+    success_url: `${window.location.origin}/settings`,
+    cancel_url: `${window.location.origin}/settings`,
   });
 
   return new Promise<string>((resolve, reject) => {
@@ -63,7 +63,7 @@ export const getPortalUrl = async (app: FirebaseApp): Promise<string> => {
     );
     const { data } = await functionRef({
       customerId: user?.uid,
-      returnUrl: window.location.origin,
+      returnUrl: `${window.location.origin}/settings`,
     });
 
     // Add a type to the data
