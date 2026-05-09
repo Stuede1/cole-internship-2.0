@@ -74,56 +74,6 @@
 
 @media (max-width: 768px) {
   .user-profile {
-    margin: 12px;
-    padding: 8px 12px;
-  }
-
-  .user-profile__info {
-    gap: 8px;
-  }
-
-  .user-profile__avatar {
-    width: 32px;
-    height: 32px;
-    padding: 6px;
-  }
-
-  .user-profile__name {
-    font-size: 13px;
-  }
-
-  .user-profile__email {
-    font-size: 11px;
-  }
-
-  .user-profile__login-btn {
-    padding: 6px 12px;
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 576px) {
-  .user-profile {
-    margin: 8px;
-    padding: 6px 10px;
-  }
-
-  .user-profile__avatar {
-    width: 28px;
-    height: 28px;
-    padding: 5px;
-  }
-
-  .user-profile__name {
-    font-size: 12px;
-  }
-
-  .user-profile__email {
-    font-size: 10px;
-  }
-
-  .user-profile__login-btn {
-    padding: 5px 10px;
-    font-size: 12px;
+    display: none;
   }
 }
