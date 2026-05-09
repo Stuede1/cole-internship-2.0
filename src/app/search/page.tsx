@@ -16,6 +16,7 @@ interface Book {
   imageLink: string;
   averageRating: number;
   subscriptionRequired: boolean;
+  audioLink?: string;
 }
 
 export default function SearchPage() {
@@ -24,11 +25,69 @@ export default function SearchPage() {
   const [searchResults, setSearchResults] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [bookDurations, setBookDurations] = useState<{ [key: string]: number | null }>({});
 
-  const getRandomTime = () => {
-    const minutes = Math.floor(Math.random() * 3) + 3;
-    const seconds = Math.floor(Math.random() * 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  const formatDuration = (seconds: number | null) => {
+    if (seconds === null) return '--:--';
+    if (!seconds) return 'Loading...';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Load cached durations from localStorage
+  useEffect(() => {
+    const cached = localStorage.getItem('bookDurations');
+    if (cached) {
+      setBookDurations(JSON.parse(cached));
+    }
+  }, []);
+
+  const loadAudioDurations = async (books: Book[]) => {
+    const durations: { [key: string]: number | null } = { ...bookDurations };
+    const booksToLoad: Book[] = [];
+    
+    for (const book of books) {
+      if (durations[book.id] === undefined && book.audioLink) {
+        booksToLoad.push(book);
+      }
+    }
+    
+    for (const book of booksToLoad) {
+      try {
+        const audio = new Audio(book.audioLink);
+        audio.load();
+        
+        const timeout = setTimeout(() => {
+          if (durations[book.id] === undefined) {
+            durations[book.id] = null;
+            setBookDurations({ ...durations });
+            localStorage.setItem('bookDurations', JSON.stringify(durations));
+          }
+        }, 10000);
+        
+        await new Promise<void>((resolve) => {
+          audio.addEventListener('loadedmetadata', () => {
+            clearTimeout(timeout);
+            durations[book.id] = audio.duration;
+            setBookDurations({ ...durations });
+            localStorage.setItem('bookDurations', JSON.stringify(durations));
+            resolve();
+          });
+          audio.addEventListener('error', () => {
+            clearTimeout(timeout);
+            durations[book.id] = null;
+            setBookDurations({ ...durations });
+            localStorage.setItem('bookDurations', JSON.stringify(durations));
+            resolve();
+          });
+        });
+      } catch (error) {
+        durations[book.id] = null;
+        setBookDurations({ ...durations });
+        localStorage.setItem('bookDurations', JSON.stringify(durations));
+      }
+    }
   };
 
   useEffect(() => {
@@ -52,8 +111,9 @@ export default function SearchPage() {
       const data = await response.json();
       console.log('Search results:', data);
       setSearchResults(data);
+      loadAudioDurations(data);
     } catch (err) {
-      setError('Failed to search for books');
+      setError('Failed to fetch search results');
     } finally {
       setLoading(false);
     }
@@ -104,7 +164,7 @@ export default function SearchPage() {
                         <button className="book-card-horizontal__play-button">
                           <span className="book-card-horizontal__play-icon">▶</span>
                         </button>
-                        <span className="book-card-horizontal__duration">{getRandomTime()}</span>
+                        <span className="book-card-horizontal__duration">{formatDuration(bookDurations[book.id])}</span>
                       </div>
                     </div>
                   </div>

@@ -21,6 +21,7 @@ interface LibraryBook {
   type: 'saved' | 'finished';
   dateAdded?: string;
   progress?: number;
+  audioLink?: string;
 }
 
 export default function MyLibraryPage() {
@@ -30,6 +31,70 @@ export default function MyLibraryPage() {
   const [finishedBooks, setFinishedBooks] = useState<LibraryBook[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingDetails, setLoadingDetails] = useState<{ [key: string]: boolean }>({});
+  const [bookDurations, setBookDurations] = useState<{ [key: string]: number | null }>({});
+  
+  const formatDuration = (seconds: number | null) => {
+    if (seconds === null) return '--:--';
+    if (!seconds) return 'Loading...';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Load cached durations from localStorage
+  useEffect(() => {
+    const cached = localStorage.getItem('bookDurations');
+    if (cached) {
+      setBookDurations(JSON.parse(cached));
+    }
+  }, []);
+
+  const loadAudioDurations = async (books: LibraryBook[]) => {
+    const durations: { [key: string]: number | null } = { ...bookDurations };
+    const booksToLoad: LibraryBook[] = [];
+    
+    for (const book of books) {
+      if (durations[book.id] === undefined && book.audioLink) {
+        booksToLoad.push(book);
+      }
+    }
+    
+    for (const book of booksToLoad) {
+      try {
+        const audio = new Audio(book.audioLink);
+        audio.load();
+        
+        const timeout = setTimeout(() => {
+          if (durations[book.id] === undefined) {
+            durations[book.id] = null;
+            setBookDurations({ ...durations });
+            localStorage.setItem('bookDurations', JSON.stringify(durations));
+          }
+        }, 10000);
+        
+        await new Promise<void>((resolve) => {
+          audio.addEventListener('loadedmetadata', () => {
+            clearTimeout(timeout);
+            durations[book.id] = audio.duration;
+            setBookDurations({ ...durations });
+            localStorage.setItem('bookDurations', JSON.stringify(durations));
+            resolve();
+          });
+          audio.addEventListener('error', () => {
+            clearTimeout(timeout);
+            durations[book.id] = null;
+            setBookDurations({ ...durations });
+            localStorage.setItem('bookDurations', JSON.stringify(durations));
+            resolve();
+          });
+        });
+      } catch (error) {
+        durations[book.id] = null;
+        setBookDurations({ ...durations });
+        localStorage.setItem('bookDurations', JSON.stringify(durations));
+      }
+    }
+  };
   
   useEffect(() => {
     // Load user's actual library data from localStorage
@@ -56,6 +121,9 @@ export default function MyLibraryPage() {
           })
         );
         
+        // Load audio durations for saved books
+        loadAudioDurations(savedBooksWithDetails);
+        
         // Fetch full book details for each finished book
         const finishedBooksWithDetails = await Promise.all(
           finishedBooks.map(async (book: any) => {
@@ -69,6 +137,9 @@ export default function MyLibraryPage() {
             }
           })
         );
+        
+        // Load audio durations for finished books
+        loadAudioDurations(finishedBooksWithDetails);
         
         setSavedBooks(savedBooksWithDetails);
         setFinishedBooks(finishedBooksWithDetails);
@@ -162,7 +233,7 @@ export default function MyLibraryPage() {
                       <div className="book-card-vertical__time-rating">
                         <span className="book-card-vertical__time">
                           <FaClock className="book-card-vertical__icon" />
-                          15:32
+                          {formatDuration(bookDurations[book.id])}
                         </span>
                         <div className="book-card-vertical__rating">
                           <FaStar className="book-card-vertical__icon" />
@@ -206,7 +277,7 @@ export default function MyLibraryPage() {
                       <div className="book-card-vertical__time-rating">
                         <span className="book-card-vertical__time">
                           <FaClock className="book-card-vertical__icon" />
-                          15:32
+                          {formatDuration(bookDurations[book.id])}
                         </span>
                         <div className="book-card-vertical__rating">
                           <FaStar className="book-card-vertical__icon" />

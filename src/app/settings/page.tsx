@@ -3,28 +3,25 @@
 import { useAuth } from '@/components/AuthContext';
 import { useEffect, useState } from 'react';
 import { getAuth, updateProfile } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import TopNavbar from '@/components/TopNavbar';
 import AuthModal from '@/components/AuthModal';
-import UpgradeModal from '@/components/UpgradeModal';
 import { SettingsItemSkeleton } from '@/components/Skeleton';
 import app from '@/firebase';
-import { getCheckoutUrl, getPortalUrl } from '@/utils/stripePayment';
+import { getPortalUrl } from '@/utils/stripePayment';
 import { getPremiumStatus } from '@/utils/getPremiumStatus';
 import './settings.css';
 
 export default function SettingsPage() {
   const { currentUser } = useAuth();
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
   const [isLoadingPremium, setIsLoadingPremium] = useState(true);
   const [isEditingDisplayName, setIsEditingDisplayName] = useState(false);
   const [newDisplayName, setNewDisplayName] = useState('');
   const [isUpdatingDisplayName, setIsUpdatingDisplayName] = useState(false);
-  
-  // Your Stripe price ID for the premium subscription
-  const PRICE_ID = 'price_1TUxyjF1njQGrJJccuCg1brO';
   
   useEffect(() => {
     if (!currentUser) {
@@ -50,20 +47,12 @@ export default function SettingsPage() {
     checkPremiumStatus();
   }, [currentUser]);
   
-  const handleUpgradeClick = async () => {
+  const handleUpgradeClick = () => {
     if (!currentUser) {
       setShowAuthModal(true);
       return;
     }
-
-    try {
-      const checkoutUrl = await getCheckoutUrl(app, PRICE_ID);
-      window.location.href = checkoutUrl;
-    } catch (error) {
-      console.error('Error creating checkout session:', error);
-      // Fallback to showing the modal if checkout fails
-      setShowUpgradeModal(true);
-    }
+    router.push('/choose-plan');
   };
 
   const handleManageSubscription = async () => {
@@ -233,7 +222,6 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
-      <UpgradeModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   );

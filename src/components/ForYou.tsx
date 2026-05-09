@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { FaClock, FaStar, FaCrown } from 'react-icons/fa';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { FaClock, FaStar } from 'react-icons/fa';
+import Sidebar from './Sidebar';
+import TopNavbar from './TopNavbar';
 import Skeleton, { BookCardHorizontalSkeleton, BookCardVerticalSkeleton } from './Skeleton';
 import './ForYou.css';
 
@@ -14,6 +16,7 @@ interface Book {
   imageLink: string;
   averageRating: number;
   subscriptionRequired: boolean;
+  audioLink?: string;
 }
 
 function ForYouContent() {
@@ -27,11 +30,90 @@ function ForYouContent() {
   const [error, setError] = useState<string | null>(null);
   const [recommendedError, setRecommendedError] = useState<string | null>(null);
   const [suggestedError, setSuggestedError] = useState<string | null>(null);
+  const [bookDurations, setBookDurations] = useState<{ [key: string]: number | null }>({});
+  const loadingRef = useRef<Set<string>>(new Set());
 
-  const getRandomTime = () => {
-    const minutes = Math.floor(Math.random() * 3) + 3; // Random between 3-5
-    const seconds = Math.floor(Math.random() * 60); // Random seconds 0-59
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  const formatDuration = (seconds: number | null) => {
+    if (seconds === null) return '--:--';
+    if (!seconds) return 'Loading...';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Load cached durations from localStorage
+  useEffect(() => {
+    const cached = localStorage.getItem('bookDurations');
+    if (cached) {
+      setBookDurations(JSON.parse(cached));
+    }
+  }, []);
+
+  const loadAudioDurations = async (books: Book[]) => {
+    for (const book of books) {
+      // Skip if already loading or already has duration
+      if (loadingRef.current.has(book.id) || bookDurations[book.id] !== undefined) {
+        continue;
+      }
+      
+      if (!book.audioLink) {
+        setBookDurations(prev => ({ ...prev, [book.id]: null }));
+        continue;
+      }
+      
+      // Mark as loading
+      loadingRef.current.add(book.id);
+      
+      try {
+        const audio = new Audio(book.audioLink);
+        audio.load();
+        
+        const timeout = setTimeout(() => {
+          loadingRef.current.delete(book.id);
+          setBookDurations(prev => {
+            const durations = { ...prev };
+            if (durations[book.id] === undefined) {
+              durations[book.id] = null;
+              localStorage.setItem('bookDurations', JSON.stringify(durations));
+            }
+            return durations;
+          });
+        }, 10000);
+        
+        await new Promise<void>((resolve) => {
+          audio.addEventListener('loadedmetadata', () => {
+            clearTimeout(timeout);
+            loadingRef.current.delete(book.id);
+            setBookDurations(prev => {
+              const durations = { ...prev };
+              durations[book.id] = audio.duration;
+              localStorage.setItem('bookDurations', JSON.stringify(durations));
+              return durations;
+            });
+            resolve();
+          });
+          audio.addEventListener('error', () => {
+            clearTimeout(timeout);
+            loadingRef.current.delete(book.id);
+            setBookDurations(prev => {
+              const durations = { ...prev };
+              durations[book.id] = null;
+              localStorage.setItem('bookDurations', JSON.stringify(durations));
+              return durations;
+            });
+            resolve();
+          });
+        });
+      } catch (error) {
+        loadingRef.current.delete(book.id);
+        setBookDurations(prev => {
+          const durations = { ...prev };
+          durations[book.id] = null;
+          localStorage.setItem('bookDurations', JSON.stringify(durations));
+          return durations;
+        });
+      }
+    }
   };
 
   useEffect(() => {
@@ -41,6 +123,7 @@ function ForYouContent() {
         const data = await response.json();
         console.log('Selected books:', data);
         setBooks(data);
+        loadAudioDurations(data);
         setLoading(false);
       } catch (err) {
         setError('Failed to load books');
@@ -54,6 +137,7 @@ function ForYouContent() {
         const data = await response.json();
         console.log('Recommended books:', data);
         setRecommendedBooks(data);
+        loadAudioDurations(data);
         setLoadingRecommended(false);
       } catch (err) {
         setRecommendedError('Failed to load recommended books');
@@ -67,6 +151,7 @@ function ForYouContent() {
         const data = await response.json();
         console.log('Suggested books:', data);
         setSuggestedBooks(data);
+        loadAudioDurations(data);
         setLoadingSuggested(false);
       } catch (err) {
         setSuggestedError('Failed to load suggested books');
@@ -125,7 +210,7 @@ function ForYouContent() {
                   <button className="book-card-horizontal__play-button">
                     <span className="book-card-horizontal__play-icon">▶</span>
                   </button>
-                  <span className="book-card-horizontal__duration">15:32</span>
+                  <span className="book-card-horizontal__duration">{formatDuration(bookDurations[book.id])}</span>
                 </div>
               </div>
             </div>
@@ -162,7 +247,7 @@ function ForYouContent() {
                     <div className="book-card-vertical__time-rating">
                       <span className="book-card-vertical__time">
                         <FaClock className="book-card-vertical__icon" />
-                        {getRandomTime()}
+                        {formatDuration(bookDurations[book.id])}
                       </span>
                       <div className="book-card-vertical__rating">
                         <FaStar className="book-card-vertical__icon" />
@@ -208,7 +293,7 @@ function ForYouContent() {
                     <div className="book-card-vertical__time-rating">
                       <span className="book-card-vertical__time">
                         <FaClock className="book-card-vertical__icon" />
-                        {getRandomTime()}
+                        {formatDuration(bookDurations[book.id])}
                       </span>
                       <div className="book-card-vertical__rating">
                         <FaStar className="book-card-vertical__icon" />

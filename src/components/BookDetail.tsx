@@ -6,7 +6,6 @@ import { FaClock, FaStar, FaMicrophone, FaLightbulb } from 'react-icons/fa';
 import Sidebar from './Sidebar';
 import TopNavbar from './TopNavbar';
 import AuthModal from './AuthModal';
-import UpgradeModal from './UpgradeModal';
 import { useAuth } from './AuthContext';
 import { useLibraryManager } from './LibraryManager';
 import app from '@/firebase';
@@ -21,13 +20,14 @@ interface Book {
   imageLink: string;
   averageRating: number;
   subscriptionRequired: boolean;
-  bookDescription: string;
-  bookDuration: string;
-  type: string;
-  keyIdeas: string;
-  tags: string[];
-  totalRating: number;
-  authorDescription: string;
+  audioLink?: string;
+  bookDuration?: string;
+  keyIdeas?: string;
+  type?: string;
+  totalRating?: number;
+  bookDescription?: string;
+  authorDescription?: string;
+  tags?: string[];
 }
 
 function BookDetail() {
@@ -39,10 +39,10 @@ function BookDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
   const [isLoadingPremium, setIsLoadingPremium] = useState(true);
+  const [audioDuration, setAudioDuration] = useState<number | null>(null);
   
   
   useEffect(() => {
@@ -90,6 +90,42 @@ function BookDetail() {
     checkPremiumStatus();
   }, [currentUser]);
 
+  useEffect(() => {
+    if (book?.audioLink) {
+      const audio = new Audio(book.audioLink);
+      audio.load();
+      
+      const timeout = setTimeout(() => {
+        if (audioDuration === null) {
+          setAudioDuration(null);
+        }
+      }, 10000);
+      
+      audio.addEventListener('loadedmetadata', () => {
+        clearTimeout(timeout);
+        setAudioDuration(audio.duration);
+      });
+      audio.addEventListener('error', () => {
+        clearTimeout(timeout);
+        console.error('Error loading audio metadata');
+        setAudioDuration(null);
+      });
+      return () => {
+        clearTimeout(timeout);
+        audio.removeEventListener('loadedmetadata', () => {});
+        audio.removeEventListener('error', () => {});
+      };
+    }
+  }, [book]);
+
+  const formatDuration = (seconds: number | null) => {
+    if (seconds === null) return '--:--';
+    if (!seconds) return 'Loading...';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   const handleReadOrListen = () => {
     if (!book) return;
     
@@ -107,8 +143,8 @@ function BookDetail() {
 
     // Check if user has active Stripe subscription
     if (book.subscriptionRequired && !isPremium) {
-      // Show upgrade modal for basic users
-      setShowUpgradeModal(true);
+      // Redirect to choose-plan page for basic users
+      router.push('/choose-plan');
       return;
     }
 
@@ -201,7 +237,7 @@ function BookDetail() {
               </div>
               <div className="book-detail__meta-item">
                 <span className="book-detail__meta-label">Duration</span>
-                <span className="book-detail__meta-value">{book.bookDuration || '15:32'}</span>
+                <span className="book-detail__meta-value">{formatDuration(audioDuration)}</span>
               </div>
               <div className="book-detail__meta-item">
                 <span className="book-detail__meta-value">
@@ -212,7 +248,7 @@ function BookDetail() {
               <div className="book-detail__meta-item">
                 <span className="book-detail__meta-value">
                   <FaLightbulb className="book-detail__icon" />
-                  {book.keyIdeas || 'Key Ideas'}
+                  {parseInt(book.keyIdeas || '0') || 0} Key Ideas
                 </span>
               </div>
             </div>
@@ -239,6 +275,12 @@ function BookDetail() {
               ) : book.subscriptionRequired && !isPremium ? (
                 <div className="book-detail__guest-message">
                   <p>Upgrade to Premium to view the full description</p>
+                  <button 
+                    className="book-detail__upgrade-link"
+                    onClick={() => router.push('/choose-plan')}
+                  >
+                    Choose a Plan
+                  </button>
                 </div>
               ) : (
                 <p>{book.bookDescription || 'No description available.'}</p>
@@ -262,7 +304,6 @@ function BookDetail() {
       </div>
       
       <AuthModal isOpen={showAuthModal} onClose={closeAuthModal} />
-      <UpgradeModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
     </div>
   );
 }

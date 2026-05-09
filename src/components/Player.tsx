@@ -18,6 +18,7 @@ interface Book {
   subscriptionRequired: boolean;
   audioLink: string;
   bookDescription: string;
+  summary: string;
 }
 
 function Player() {
@@ -202,7 +203,7 @@ function Player() {
           <div className="player__summary">
             <h2 className="player__summary-title">Summary</h2>
             <p className="player__summary-text" style={{ whiteSpace: 'pre-line' }}>
-              {book.bookDescription}
+              {book.summary}
             </p>
           </div>
         </div>

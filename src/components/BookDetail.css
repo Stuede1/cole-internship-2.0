@@ -203,7 +203,23 @@
 .book-detail__guest-message p {
   color: #6b757b;
   font-style: italic;
-  margin: 0;
+  margin: 0 0 12px 0;
+}
+
+.book-detail__upgrade-link {
+  background-color: #032b41;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 200ms;
+}
+
+.book-detail__upgrade-link:hover {
+  background-color: #0453a8;
 }
 
 .book-detail__author-section {
