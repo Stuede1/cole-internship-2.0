@@ -6,6 +6,7 @@ import { FaClock, FaStar } from 'react-icons/fa';
 import Sidebar from './Sidebar';
 import TopNavbar from './TopNavbar';
 import Skeleton, { BookCardHorizontalSkeleton, BookCardVerticalSkeleton } from './Skeleton';
+import { formatDuration } from '@/utils/formatDuration';
 import './ForYou.css';
 
 interface Book {
@@ -33,13 +34,6 @@ function ForYouContent() {
   const [bookDurations, setBookDurations] = useState<{ [key: string]: number | null }>({});
   const loadingRef = useRef<Set<string>>(new Set());
 
-  const formatDuration = (seconds: number | null) => {
-    if (seconds === null) return '--:--';
-    if (!seconds) return 'Loading...';
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   useEffect(() => {
     const cached = localStorage.getItem('bookDurations');

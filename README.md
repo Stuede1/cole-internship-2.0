@@ -94,6 +94,28 @@ npm run build
 - **Footer Navigation** - Complete site structure
 - **Google Sign-In** - Seamless authentication
 
+## Testing
+
+The project includes a comprehensive test suite built with **Jest** and **React Testing Library**, covering three layers:
+
+| Layer | File | Tests |
+|---|---|---|
+| Unit | `src/utils/formatDuration.test.ts` | 13 |
+| Integration | `src/components/ForYou.test.tsx` | 8 |
+| Component | `src/app/search/SearchPage.test.tsx` | 9 |
+
+### Run Tests
+
+```bash
+npm test
+```
+
+### What's Covered
+
+- **Duration formatting logic** — null handling, zero/pending states, standard mm:ss output, large values (hour+), fractional flooring, zero-padded seconds
+- **Async data fetching** — mocked `fetch` calls to Firebase Cloud Functions, loading skeleton states, error handling for network failures, correct book card rendering with title/author/subtitle
+- **User interactions** — debounced search input (300ms delay), result display, empty-state messaging, navigation to book detail on card click, Premium badge display, input clearing resets results
+
 ---
 
 **Built with ❤️ using Next.js, TypeScript, and Firebase**

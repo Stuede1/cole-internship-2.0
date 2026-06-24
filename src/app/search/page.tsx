@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { FaClock, FaStar } from 'react-icons/fa';
 import Sidebar from '@/components/Sidebar';
 import TopNavbar from '@/components/TopNavbar';
+import { formatDuration } from '@/utils/formatDuration';
 import './search.css';
 import '@/components/ForYou.css';
 
@@ -27,13 +28,6 @@ export default function SearchPage() {
   const [error, setError] = useState<string | null>(null);
   const [bookDurations, setBookDurations] = useState<{ [key: string]: number | null }>({});
 
-  const formatDuration = (seconds: number | null) => {
-    if (seconds === null) return '--:--';
-    if (!seconds) return 'Loading...';
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   // Load cached durations from localStorage
   useEffect(() => {
